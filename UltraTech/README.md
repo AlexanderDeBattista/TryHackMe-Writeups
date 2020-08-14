@@ -1,4 +1,4 @@
-#UltraTech writeup
+# UltraTech writeup
 This is an intermediate challange that requires relatively easy methods for privilegie escalation.
 
 Enumeration:
