@@ -1,3 +1,2 @@
-# Writeups for TryHackMe.com challanges that I have solved
-
+# Writeups for TryHackMe.com
 
