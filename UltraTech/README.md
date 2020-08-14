@@ -70,7 +70,7 @@ I intall `linpeas.sh` in r00t's home directory and run it.
 
 ![Linpeas](images/linpeas.png)
 
-The Docker user seems to stand out, so we better check that out more closely. Heading over to [GTFObin's site for docker](https://gtfobins.github.io/gtfobins/docker/) we see that the `docker run -v /:/mnt --rm -it bash chroot /mnt sh` can be used to escape restricted shells and gain root access.
+r00t seems to be in the Docker group, so we better check that out more closely. There might be some Docker related commands we can use to escalate our privileges. Heading over to [GTFObin's site for docker](https://gtfobins.github.io/gtfobins/docker/) we see that the `docker run -v /:/mnt --rm -it bash chroot /mnt sh` can be used to escape restricted shells and gain root access.
 
 ![Rooted!](images/root.png)
 
