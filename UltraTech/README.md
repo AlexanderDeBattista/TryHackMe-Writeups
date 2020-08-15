@@ -1,7 +1,8 @@
 # UltraTech writeup
 This is an intermediate challange that requires relatively easy methods for privilegie escalation.
 
-Enumeration:
+## Enumeration
+
 Using `sudo nmap -Pn -p- -v -A 10.10.22.222` to find open ports on the server yields the following results:
 ![nmap scan](images/nmap.png)
 
@@ -39,6 +40,8 @@ In the api.js file we see this
 
 This script seems to, amongst other things, ping itself on port 8081 (which is where the Node.js site resides) to check if the API is running. The new endpoint, `http://10.10.55.254:8081/ping?ip={some_ip}`, is revealed. 
 
+## User privileges
+
 By going to `http://10.10.55.254:8081/ping?ip=10.10.55.254` we get this reply `PING 10.10.55.254 (10.10.55.254) 56(84) bytes of data. 64 bytes from 10.10.55.254: icmp_seq=1 ttl=64 time=0.023 ms --- 10.10.55.254 ping statistics --- 1 packets transmitted, 1 received, 0% packet loss, time 0ms rtt min/avg/max/mdev = 0.023/0.023/0.023/0.000 ms` which looks a lot like Linux' standard ping reply. This implies that the system might be vulnerable for a [command injection attack](https://owasp.org/www-community/attacks/Command_Injection). An inline execution is performed when a command is surrounded by backticks (`).
 
 Thus by sending the argument ``` `ls` ``` to the server, we first execute the ls command, and then send the result to the ping command. By going to ``` http://10.10.55.254:8081/ping?ip=`ls` ``` we receive this reply from the server. `ping: utech.db.sqlite: Name or service not known `
@@ -64,6 +67,8 @@ Using [Crackstation](crackstation.net) i find that the password for `r00t` is `n
 ![Crackstation](images/md5.png)
 
 I try to connect to the server with SSH by using these credentials, and to my suprise the username and password combination actually works! User privilegies gained! :^)
+
+## Privilege escalation
 
 Basic enumeration as r00t does not give us anything. 
 I intall `linpeas.sh` in r00t's home directory and run it. 
