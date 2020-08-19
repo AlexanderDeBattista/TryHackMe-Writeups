@@ -87,6 +87,8 @@ Grecia's user.txt is located here!
 1. user.txt
     * 0b6044b7807dd100b9e30f1bd09db53f
 
+## Privilege Escalation 
+
 By running `sudo -l` we can see which (if any) commands we are able to run with escalated privileges. To my surprise all commands can be run as root without providing a password.
 
 ![Sudo](images/sudo.png)
