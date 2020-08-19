@@ -1,5 +1,5 @@
 # UltraTech writeup
-This is an intermediate challange that requires relatively easy methods for privilegie escalation.
+This is an intermediate challange that requires relatively easy methods for privilege escalation.
 
 ## Enumeration
 
@@ -66,7 +66,7 @@ Using [Crackstation](crackstation.net) i find that the password for `r00t` is `n
 
 ![Crackstation](images/md5.png)
 
-I try to connect to the server with SSH by using these credentials, and to my suprise the username and password combination actually works! User privilegies gained! :^)
+I try to connect to the server with SSH by using these credentials, and to my suprise the username and password combination actually works! User privileges gained! :^)
 
 ## Privilege escalation
 
