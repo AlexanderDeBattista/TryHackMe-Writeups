@@ -55,3 +55,26 @@ Heading to the file that contains `AES` we see a decryption key and an initializ
 Decryption key `sUp3rCr3tKEforL!`
 
 Initialization vector `sUp3rCr3tIVforL!`
+
+Using `OpenSSL` we try to decrypt the file. It is important to note that the IV and Key must be encoded as hex in order for OpenSSL to be able to use it.
+![hex](images/hex.png)
+
+The first line of the file that contains `AES/CBC/128 ` must be removed because it's not part of the encryption. We further see that the file is encoded by base64, so that must be first be decoded before OpenSSL can decrypt it.
+
+That gives us this command 
+
+`base64 -d secret| openssl aes-128-cbc -d -out secretDecrypted -iv '7355703372437233744956666f724c21' -K '7355703372437233744b45666f724c21'`
+
+```
+----[---->+<]>--.+[--->+<]>+.[--->+<]>+.[->+++++<]>+.[----->+<]>+.++.[--->+<]>--.>-[--->+<]>-.+++.+[----->+<]>.-----------.>+[--->++<]>.>-[-
+[...]
++.---.---[-->+++<]>--.-[--->++<]>+.>-[----->+<]>-.[->++<]>.+[--->+<]>.-[++>---<]>-.[----->+<]>---.>+[--->++<]>.
+```
+
+This looks a lot like `brainfuck` encoding, so let's try to decode it. The decoded text from [this site](https://www.splitbrain.org/_static/ook/) looks like reversed base64 encoding.
+
+![brainfuck](images/brainfuck.png)
+![reverse](images/reverse.png)
+
+Reverse to base64 `echo "=kzcHJl[...]mV" | rev`
+
