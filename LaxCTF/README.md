@@ -76,5 +76,9 @@ This looks a lot like `brainfuck` encoding, so let's try to decode it. The decod
 ![brainfuck](images/brainfuck.png)
 ![reverse](images/reverse.png)
 
-Reverse to base64 `echo "=kzcHJl[...]mV" | rev`
+Reverse to base64 and decode `echo "=kzcHJl[...]mV" | rev | base64 -d` to get a new base64 encoding `Vm0wd[...]Gs9`. Keep decoding this string until you get the plaintext `king:tryh@ckm3w4sH3r3`. This is probably a SSH login, so let's try that!
 
+
+
+Success! We got user.
+![user](images/ssh.png)
