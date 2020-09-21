@@ -25,7 +25,7 @@ This response sets a cookie that is associated with the domain `pwd.harder.local
 
 ![new request](images/alterRequest.png)
 
-We thus need to associate the IP to the webserver with _pwd.harder.local_. `sudo echo "<IP_to_server> pwd.harder.local" >> /etc/hosts` This means that going to the website `pwd.harder.local` will take you to the associated IP.
+We thus need to associate the IP to the webserver with _pwd.harder.local_. `sudo nano /etc/hosts` and adding `<IP_to_server> pwd.harder.local` under the IPv4 section. This means that going to the website `pwd.harder.local` will take you to the associated IP.
 
 Going to `pwd.harder.local` prompts us with a login. 
 
