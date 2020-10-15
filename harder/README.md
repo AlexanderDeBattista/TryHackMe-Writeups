@@ -110,3 +110,42 @@ Finally! We get access to some sort of shell we're able to interact with.
 By poking around a little we find `evs` home directory, and the user's `user.txt` file.
 
 ![](images/user.png)
+
+Great! We got the user flag, but we want to further escalate our privileges. An method that often comes in handy is searching for all files that belong to our user. The user is in this case `www`. So we execute the command `find / -user www`. In the myriad of files we find this suspicious lookign script.
+
+
+![](images/evs-backup.png)
+
+
+Heading over to this file gives us some new credentials for `evs`.
+
+```bash
+#!/bin/ash
+
+# ToDo: create a backup script, that saves the /www directory to our internal server
+# for authentication use ssh with user "evs" and password "U6j1brxGqbsUA$pMuIodnb$SZB4$bw14"
+```
+
+We got lucky when testing the credentials out on SSH.
+
+![](images/ssh.png)
+
+I uploaded and ran _linpeas_, which told me to take a look at a file called `run-crypted.sh` and some public key looking file.
+
+![](images/lin.png)
+
+The `run-crypted.sh` file looks like this
+
+```bash
+if [ $# -eq 0 ]
+  then
+    echo -n "[*] Current User: ";
+    whoami;
+    echo "[-] This program runs only commands which are encypted for root@harder.local using gpg."
+    echo "[-] Create a file like this: echo -n whoami > command"
+    echo "[-] Encrypt the file and run the command: execute-crypted command.gpg"
+  else
+    export GNUPGHOME=/root/.gnupg/
+    gpg --decrypt --no-verbose "$1" | ash
+fi
+```
