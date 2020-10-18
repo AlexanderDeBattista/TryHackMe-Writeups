@@ -149,3 +149,36 @@ if [ $# -eq 0 ]
     gpg --decrypt --no-verbose "$1" | ash
 fi
 ```
+
+This script seeems to run any command passed to it, given that it's encrypted with the recipients `root@harder.local`'s key.
+
+Linpeas convenietly also found what seems to be a public key in `/var/backup/root@harder.local.pub`.
+Checking this out gives us this public key we can use to encrypt a command with:
+
+```
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mDMEXwTf8RYJKwYBBAHaRw8BAQdAkJtb3UCYvPmb1/JyRPADF0uYjU42h7REPlOK
+AbiN88i0IUFkbWluaXN0cmF0b3IgPHJvb3RAaGFyZGVyLmxvY2FsPoiQBBMWCAA4
+FiEEb5liHk1ktq/OVuhkyR1mFZRPaHQFAl8E3/ECGwMFCwkIBwIGFQoJCAsCBBYC
+AwECHgECF4AACgkQyR1mFZRPaHSt8wD8CvJLt7qyCXuJZdOBPR+X7GI2dUg0DRRu
+c5gXzwk3rMMA/0JK6ZwZCHObWjwX0oLc3jvOCgQiIdaPq1WqN9/fhLAKuDgEXwTf
+8RIKKwYBBAGXVQEFAQEHQNa/To/VntzySOVdvOCW+iGscTLlnsjOmiGaaWvJG14O
+AwEIB4h4BBgWCAAgFiEEb5liHk1ktq/OVuhkyR1mFZRPaHQFAl8E3/ECGwwACgkQ
+yR1mFZRPaHTMLQD/cqbV4dMvINa/KxATQDnbaln1Lg0jI9Jie39U44GKRIEBAJyi
++2AO+ERYahiVzkWwTEoUpjDJIv0cP/WVzfTvPk0D
+=qaa6
+-----END PGP PUBLIC KEY BLOCK-----
+```
+
+If we're able to run commands with escalated privileges by encrypting a message with a public key, then there is obviously a massive security hole. The public key is, as the name suggests, a key anyone can access. Thus anyone might run a command as root.
+
+In _gpg_ you may only encrypt a file with respect to a _recipient_ and not directly through a public key. We already know the public key and recipient's name. To construct a recipient in gpg you may run this command `gpg --homedir ~ --import /var/backup/root@harder.local.pub`
+
+Simply create a new document with the command we want to run `echo -n "cat /root/root.txt > /home/evs/root.txt" > command`
+
+Encrypt the command `gpg --homedir ~ --recipient root@harder.local --encrypt command`, and run `execute-crypted command.gpg` as instructed in the script. The encrypted command is then decrypted with the root's private key and then executed. We can then retrieve the root flag in our home directory!
+
+![](images/rooted.png)
+
+Rooted! :^)
